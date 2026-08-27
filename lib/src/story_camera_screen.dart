@@ -191,30 +191,37 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
   Future<void> _requestPermissionsAndInitialize() async {
     setState(() => _isLoading = true);
 
-    // Request all permissions at once (permission_handler doesn't support parallel)
-    final statuses = await [
-      Permission.camera,
-      Permission.microphone,
-      Permission.photos,
-    ].request();
+    try {
+      final statuses = await [
+        Permission.camera,
+        Permission.microphone,
+      ].request();
 
-    final cameraStatus = statuses[Permission.camera]!;
-    final galleryStatus = statuses[Permission.photos]!;
+      final cameraStatus = statuses[Permission.camera] ?? await Permission.camera.status;
+      _hasPermission = cameraStatus.isGranted;
 
-    _hasPermission = cameraStatus.isGranted;
-    _hasGalleryPermission = galleryStatus.isGranted;
+      try {
+        final galleryPerm = await PhotoManager.requestPermissionExtend();
+        _hasGalleryPermission = galleryPerm.hasAccess || galleryPerm.isAuth;
+      } catch (_) {
+        _hasGalleryPermission = false;
+      }
 
-    if (!_hasPermission) {
-      // Inform user if camera permission is denied
+      if (!_hasPermission) {
+        if (mounted) {
+          setState(() => _isLoading = false);
+          _showPermissionDeniedDialog();
+        }
+        return;
+      }
+
+      await _initializeCamera();
+    } catch (e) {
+      debugPrint('Permission request error: $e');
       if (mounted) {
         setState(() => _isLoading = false);
-        _showPermissionDeniedDialog();
       }
-      return;
     }
-
-    // Permissions granted, initialize camera
-    await _initializeCamera();
   }
 
   /// Dialog to show when permission is denied
