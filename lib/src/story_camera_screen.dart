@@ -227,19 +227,21 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
   /// Dialog to show when permission is denied
   void _showPermissionDeniedDialog() {
     if (!mounted) return;
+    final config = StoryEditorConfigProvider.read(context);
+    final strings = config.strings;
 
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         backgroundColor: Colors.grey.shade900,
-        title: const Text(
-          'Permission Required',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          strings.cameraPermissionRequired,
+          style: const TextStyle(color: Colors.white),
         ),
-        content: const Text(
-          'We need camera and gallery permissions to create stories. Please grant permission from settings.',
-          style: TextStyle(color: Colors.white70),
+        content: Text(
+          strings.cameraPermissionDescription,
+          style: const TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
@@ -247,14 +249,14 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
               Navigator.pop(ctx);
               Navigator.pop(context);
             },
-            child: const Text('Cancel'),
+            child: Text(strings.cameraCancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               openAppSettings();
             },
-            child: const Text('Open Settings'),
+            child: Text(strings.cameraGrantPermission),
           ),
         ],
       ),
@@ -493,13 +495,14 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
       if (!permission.hasAccess) {
         // Permission not granted - show warning
         if (mounted) {
+          final config = context.storyEditorConfig;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Gallery access denied'),
+              content: Text(config.strings.cameraGalleryAccessDenied),
               backgroundColor: Colors.red.shade700,
               behavior: SnackBarBehavior.floating,
               action: SnackBarAction(
-                label: 'Settings',
+                label: config.strings.cameraSettings,
                 textColor: Colors.white,
                 onPressed: () => PhotoManager.openSetting(),
               ),
@@ -526,9 +529,10 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
 
       if (albums.isEmpty) {
         if (mounted) {
+          final config = context.storyEditorConfig;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('No media found in gallery'),
+              content: Text(config.strings.cameraNoMediaInGallery),
               backgroundColor: Colors.orange.shade700,
               behavior: SnackBarBehavior.floating,
             ),
@@ -543,9 +547,10 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
 
       if (totalCount == 0) {
         if (mounted) {
+          final config = context.storyEditorConfig;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('No media found in gallery'),
+              content: Text(config.strings.cameraNoMediaInGallery),
               backgroundColor: Colors.orange.shade700,
               behavior: SnackBarBehavior.floating,
             ),
@@ -607,9 +612,10 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
     } catch (e) {
       debugPrint('Gallery open error: $e');
       if (mounted) {
+        final config = context.storyEditorConfig;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Could not open gallery'),
+            content: Text(config.strings.cameraCouldNotOpenGallery),
             backgroundColor: Colors.red.shade700,
             behavior: SnackBarBehavior.floating,
           ),
@@ -669,9 +675,10 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
     } catch (e) {
       debugPrint('Capture error: $e');
       if (mounted) {
+        final config = context.storyEditorConfig;
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Could not take photo: $e')));
+        ).showSnackBar(SnackBar(content: Text('${config.strings.cameraCouldNotTakePhoto}: $e')));
       }
     }
 
@@ -720,13 +727,14 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
 
       if (!permission.hasAccess) {
         if (mounted) {
+          final config = context.storyEditorConfig;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Gallery access denied'),
+              content: Text(config.strings.cameraGalleryAccessDenied),
               backgroundColor: Colors.red.shade700,
               behavior: SnackBarBehavior.floating,
               action: SnackBarAction(
-                label: 'Settings',
+                label: config.strings.cameraSettings,
                 textColor: Colors.white,
                 onPressed: () => PhotoManager.openSetting(),
               ),
@@ -748,9 +756,10 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
 
       if (albums.isEmpty) {
         if (mounted) {
+          final config = context.storyEditorConfig;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('No images found in gallery'),
+              content: Text(config.strings.cameraNoImagesInGallery),
               backgroundColor: Colors.orange.shade700,
               behavior: SnackBarBehavior.floating,
             ),
@@ -764,9 +773,10 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
 
       if (totalCount == 0) {
         if (mounted) {
+          final config = context.storyEditorConfig;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('No images found in gallery'),
+              content: Text(config.strings.cameraNoImagesInGallery),
               backgroundColor: Colors.orange.shade700,
               behavior: SnackBarBehavior.floating,
             ),
@@ -819,9 +829,10 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
     } catch (e) {
       debugPrint('Layout gallery pick error: $e');
       if (mounted) {
+        final config = context.storyEditorConfig;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Could not open gallery'),
+            content: Text(config.strings.cameraCouldNotOpenGallery),
             backgroundColor: Colors.red.shade700,
             behavior: SnackBarBehavior.floating,
           ),
@@ -893,9 +904,10 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
           _isProcessingVideo = false;
           _isLayoutProcessing = false;
         });
+        final config = context.storyEditorConfig;
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Could not create collage: $e')));
+        ).showSnackBar(SnackBar(content: Text('${config.strings.cameraCouldNotCreateCollage}: $e')));
       }
     }
   }
@@ -2182,22 +2194,23 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
 
   /// Delete captured photo dialog
   void _showDeletePhotoDialog(int index) {
+    final config = context.storyEditorConfig;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.grey.shade900,
-        title: const Text(
-          'Delete Photo',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          config.strings.cameraDeletePhoto,
+          style: const TextStyle(color: Colors.white),
         ),
-        content: const Text(
-          'Do you want to delete this photo?',
-          style: TextStyle(color: Colors.white70),
+        content: Text(
+          config.strings.cameraDeletePhotoConfirmation,
+          style: const TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(config.strings.cameraCancel),
           ),
           TextButton(
             onPressed: () {
@@ -2207,7 +2220,7 @@ class _StoryCameraScreenState extends State<StoryCameraScreen>
                 _activeLayoutIndex = index;
               });
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text(config.strings.cameraDelete, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -3660,12 +3673,13 @@ class _GalleryPickerPageState extends State<_GalleryPickerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final config = context.storyEditorConfig;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        title: const Text('Gallery'),
+        title: Text(config.strings.cameraGallery),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => Navigator.pop(context),

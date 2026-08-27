@@ -607,9 +607,9 @@ class _StoryEditorScreenState extends State<StoryEditorScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Image Settings',
-              style: TextStyle(
+            Text(
+              config.strings.editorImageSettings,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -624,14 +624,14 @@ class _StoryEditorScreenState extends State<StoryEditorScreen> {
                     setState(() => _imageOverlays.removeAt(index));
                     Navigator.pop(context);
                   },
-                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                  child: Text(config.strings.cameraDelete, style: const TextStyle(color: Colors.red)),
                 ),
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: widget.primaryColor ?? Colors.blue,
                   ),
-                  child: const Text('OK', style: TextStyle(color: Colors.white)),
+                  child: Text(config.strings.editorOk, style: const TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -2649,8 +2649,9 @@ class _StoryEditorScreenState extends State<StoryEditorScreen> {
       debugPrint('VideoOverlayProcessor: Save to gallery error: $e');
       if (mounted) {
         if (_mediaType == MediaType.video) _videoController?.play();
+        final config = context.storyEditorConfig;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not save to gallery: $e')),
+          SnackBar(content: Text('${config.strings.editorCouldNotSave}: $e')),
         );
       }
     }
@@ -2815,8 +2816,9 @@ class _StoryEditorScreenState extends State<StoryEditorScreen> {
       debugPrint('VideoOverlayProcessor: Save error: $e');
       if (mounted) {
         if (_mediaType == MediaType.video) _videoController?.play();
+        final config = context.storyEditorConfig;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not save: $e')),
+          SnackBar(content: Text('${config.strings.editorCouldNotSave}: $e')),
         );
       }
     }
