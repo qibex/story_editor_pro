@@ -595,6 +595,7 @@ class _StoryEditorScreenState extends State<StoryEditorScreen> {
     }
 
     // If no text/gradient, only show delete option
+    final config = context.storyEditorConfig;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
